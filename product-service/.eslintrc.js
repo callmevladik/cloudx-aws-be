@@ -11,5 +11,15 @@ module.exports = {
         sourceType: 'module',
         project: './tsconfig.json',
     },
-    rules: {},
+    rules: {
+        '@typescript-eslint/strict-boolean-expressions': [
+            2,
+            {
+                allowNullableBoolean: true,
+                allowNullableString: true,
+                allowNullableNumber: true,
+            },
+        ],
+        '@typescript-eslint/no-throw-literal': 0,
+    },
 };

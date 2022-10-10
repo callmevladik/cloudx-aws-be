@@ -5,18 +5,23 @@ import { APIGatewayEvent } from 'aws-lambda';
 import { createRequestError } from '~/utils/createRequestError';
 import { StatusCodes } from '~/constants/statusCodes';
 
-const getProductByIdHandler = async (event: APIGatewayEvent) => {
+const getProductByIdHandler = async (
+    event: APIGatewayEvent,
+): Promise<{
+    statusCode: number;
+    body: string;
+}> => {
     try {
         const productId = event.pathParameters?.id;
 
         if (!productId) {
             throw createRequestError(
-                { statusCode: StatusCodes['BAD_REQUEST'] },
-                `Error! Unexpected id type`,
+                { statusCode: StatusCodes.BAD_REQUEST },
+                'Error! Unexpected id type',
             );
         }
 
-        const product = await getProductById(productId);
+        const product = await getProductById(Number(productId));
 
         return formatJSONResponse({
             product,

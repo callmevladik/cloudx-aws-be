@@ -1,7 +1,7 @@
-import { RequestErrorInterface } from './types';
+import { RequestErrorInterface } from '~/utils/createRequestError/types';
 
 export const createRequestError = (
-    { statusCode },
+    { statusCode }: any,
     message: any,
 ): RequestErrorInterface => ({
     statusCode,

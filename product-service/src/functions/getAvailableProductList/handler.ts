@@ -1,10 +1,13 @@
 import { formatJSONResponse } from '~/libs/api-gateway';
 import { middyfy } from '~/libs/lambda';
-import { getProductsList } from '~/api/getProductsList';
+import { getAvailableProductList } from '~/api/getAvailableProductList';
 
-const getProductsListHandler = async () => {
+const getAvailableProductListHandler = async (): Promise<{
+    statusCode: number;
+    body: string;
+}> => {
     try {
-        const products = await getProductsList();
+        const products = await getAvailableProductList();
 
         return formatJSONResponse({
             products,
@@ -17,4 +20,4 @@ const getProductsListHandler = async () => {
     }
 };
 
-export const main = middyfy(getProductsListHandler);
+export const main = middyfy(getAvailableProductListHandler);

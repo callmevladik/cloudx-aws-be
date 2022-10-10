@@ -2,7 +2,8 @@ import type { AWS } from '@serverless/typescript';
 
 import {
     getProductByIdHandler,
-    getProductsListHandler,
+    getProductListHandler,
+    getAvailableProductListHandler,
 } from '~/functions/index';
 
 const serverlessConfiguration: AWS = {
@@ -28,7 +29,11 @@ const serverlessConfiguration: AWS = {
         region: 'eu-west-1',
     },
     // import the function via paths
-    functions: { getProductsListHandler, getProductByIdHandler },
+    functions: {
+        getProductListHandler,
+        getAvailableProductListHandler,
+        getProductByIdHandler,
+    },
     package: { individually: true },
     custom: {
         esbuild: {

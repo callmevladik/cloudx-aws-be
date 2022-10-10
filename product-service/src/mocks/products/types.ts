@@ -6,7 +6,8 @@ export interface ProductInterface {
     released: string;
     platforms: string;
     genres: string;
-    source: string;
+    price: number;
+    count: number;
 }
 
 // Used by auto-swagger generator
