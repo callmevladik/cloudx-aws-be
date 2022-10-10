@@ -10,7 +10,7 @@ const getAvailableProductListHandler = async (): Promise<{
         const products = await getAvailableProductList();
 
         return formatJSONResponse({
-            products,
+            data: products,
         });
     } catch ({ statusCode, errorMessage }) {
         return formatJSONResponse({

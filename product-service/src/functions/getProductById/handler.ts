@@ -24,7 +24,7 @@ const getProductByIdHandler = async (
         const product = await getProductById(Number(productId));
 
         return formatJSONResponse({
-            product,
+            data: product,
         });
     } catch ({ statusCode, errorMessage }) {
         return formatJSONResponse({

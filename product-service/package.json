@@ -14,6 +14,7 @@
     },
     "dependencies": {
         "@middy/core": "^2.5.3",
+        "@middy/http-cors": "^3.5.0",
         "@middy/http-json-body-parser": "^2.5.3",
         "serverless-auto-swagger": "^2.9.2",
         "serverless-offline": "^11.1.1"
