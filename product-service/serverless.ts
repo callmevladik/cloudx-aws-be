@@ -4,6 +4,8 @@ import {
     getProductByIdHandler,
     getProductListHandler,
     getAvailableProductListHandler,
+    fillDatabaseHandler,
+    createProductHandler,
 } from '~/functions/index';
 
 const serverlessConfiguration: AWS = {
@@ -24,6 +26,19 @@ const serverlessConfiguration: AWS = {
         environment: {
             AWS_NODEJS_CONNECTION_REUSE_ENABLED: '1',
             NODE_OPTIONS: '--enable-source-maps --stack-trace-limit=1000',
+            DYNAMODB_TABLE_PRODUCTS: 'aws-cloudx-dynamodb-table-products',
+            DYNAMODB_TABLE_STOCKS: 'aws-cloudx-dynamodb-table-stocks',
+        },
+        iam: {
+            role: {
+                statements: [
+                    {
+                        Effect: 'Allow',
+                        Action: ['dynamodb:*'],
+                        Resource: '*',
+                    },
+                ],
+            },
         },
         stage: 'dev',
         region: 'eu-west-1',
@@ -33,6 +48,8 @@ const serverlessConfiguration: AWS = {
         getProductListHandler,
         getAvailableProductListHandler,
         getProductByIdHandler,
+        fillDatabaseHandler,
+        createProductHandler,
     },
     package: { individually: true },
     custom: {

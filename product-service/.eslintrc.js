@@ -21,5 +21,6 @@ module.exports = {
             },
         ],
         '@typescript-eslint/no-throw-literal': 0,
+        '@typescript-eslint/restrict-template-expressions': 0,
     },
 };

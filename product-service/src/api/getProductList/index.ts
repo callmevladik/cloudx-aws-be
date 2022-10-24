@@ -1,12 +1,27 @@
-import { ProductInterface } from '~/mocks/products/types';
-import { productsMock } from '~/mocks/products/index.mock';
 import { createRequestError } from '~/utils/createRequestError';
+import { StatusCodes } from '~/constants/statusCodes';
+import { DocumentClient } from 'aws-sdk/clients/dynamodb';
+import { scan } from '~/db/api/scan';
 
-export const getProductList = async (): Promise<ProductInterface[]> => {
+export const getProductList = async (): Promise<DocumentClient.ItemList> => {
+    const errorMessage = `Error! Couldn't find the table "${String(
+        process.env.DYNAMODB_TABLE_PRODUCTS,
+    )}"`;
+
     try {
-        // http request function body
-        return productsMock;
+        const { Items } = await scan({
+            TableName: String(process.env.DYNAMODB_TABLE_PRODUCTS),
+        });
+
+        if (!Items) {
+            throw createRequestError(
+                { statusCode: StatusCodes.BAD_REQUEST },
+                errorMessage,
+            );
+        }
+
+        return Items;
     } catch (error: any) {
-        throw createRequestError(error, "Error! Couldn't get products list.");
+        throw createRequestError(error, error.message);
     }
 };

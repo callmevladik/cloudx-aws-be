@@ -1,26 +1,32 @@
-import { ProductInterface } from '~/mocks/products/types';
-import { productsMock } from '~/mocks/products/index.mock';
 import { createRequestError } from '~/utils/createRequestError';
 import { StatusCodes } from '~/constants/statusCodes';
+import { query } from '~/db/api/query';
+import { DocumentClient } from 'aws-sdk/clients/dynamodb';
 
-export const getProductById = async (id: number): Promise<ProductInterface> => {
+export const getProductById = async (
+    id: number,
+): Promise<DocumentClient.ItemList> => {
     const errorMessage = `Error! Couldn't get product with id ${id}`;
 
     try {
-        // http request function body
-        const product = productsMock.find(
-            ({ id: productId }) => productId === id,
-        );
+        const { Items } = await query({
+            TableName: String(process.env.DYNAMODB_TABLE_PRODUCTS),
+            KeyConditionExpression: 'id = :id',
+            ExpressionAttributeValues: {
+                ':id': id,
+            },
+        });
 
-        if (product == null) {
+        if (!Items?.length) {
             throw createRequestError(
                 { statusCode: StatusCodes.NOT_FOUND },
                 errorMessage,
             );
         }
 
-        return product;
+        return Items;
     } catch (error: any) {
-        throw createRequestError(error, errorMessage);
+        console.log(error);
+        throw createRequestError(error, error.message);
     }
 };

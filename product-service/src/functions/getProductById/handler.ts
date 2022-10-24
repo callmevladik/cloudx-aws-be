@@ -11,6 +11,9 @@ const getProductByIdHandler = async (
     statusCode: number;
     body: string;
 }> => {
+    console.log('Lambda start: getProductByIdHandler');
+    console.log(`Lambda arguments: ${event.pathParameters}`);
+
     try {
         const productId = event.pathParameters?.id;
 
@@ -21,15 +24,17 @@ const getProductByIdHandler = async (
             );
         }
 
-        const product = await getProductById(Number(productId));
+        const [product] = await getProductById(Number(productId));
 
         return formatJSONResponse({
             data: product,
         });
-    } catch ({ statusCode, errorMessage }) {
+    } catch ({ statusCode, message }) {
         return formatJSONResponse({
-            statusCode,
-            error: errorMessage,
+            data: {
+                statusCode,
+                error: message,
+            },
         });
     }
 };
