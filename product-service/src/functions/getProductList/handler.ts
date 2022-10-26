@@ -6,16 +6,20 @@ const getProductListHandler = async (): Promise<{
     statusCode: number;
     body: string;
 }> => {
+    console.log('Lambda start: getProductListHandler');
+
     try {
         const products = await getProductList();
 
         return formatJSONResponse({
             data: products,
         });
-    } catch ({ statusCode, errorMessage }) {
+    } catch ({ statusCode, message }) {
         return formatJSONResponse({
-            statusCode,
-            error: errorMessage,
+            data: {
+                statusCode,
+                error: message,
+            },
         });
     }
 };

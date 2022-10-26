@@ -5,5 +5,5 @@ export const createRequestError = (
     message: any,
 ): RequestErrorInterface => ({
     statusCode,
-    errorMessage: message,
+    message,
 });

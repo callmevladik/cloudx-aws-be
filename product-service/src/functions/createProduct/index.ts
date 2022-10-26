@@ -5,12 +5,12 @@ export default {
     events: [
         {
             http: {
-                method: 'get',
-                path: 'products/available',
+                method: 'post',
+                path: 'products',
                 responseData: {
                     200: {
                         description: 'Successful operation',
-                        bodyType: 'AvailableProducts',
+                        bodyType: 'Products',
                     },
                     404: 'Products not found',
                     500: 'Server error',
