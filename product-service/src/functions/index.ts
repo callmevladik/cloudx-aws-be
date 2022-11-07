@@ -3,3 +3,4 @@ export { default as getAvailableProductListHandler } from './getAvailableProduct
 export { default as getProductByIdHandler } from './getProductById';
 export { default as fillDatabaseHandler } from './fillDatabase';
 export { default as createProductHandler } from './createProduct';
+export { default as catalogBatchProcessHandler } from './catalogBatchProcess';

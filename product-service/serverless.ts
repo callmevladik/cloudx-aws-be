@@ -6,6 +6,7 @@ import {
     getAvailableProductListHandler,
     fillDatabaseHandler,
     createProductHandler,
+    catalogBatchProcessHandler,
 } from '~/functions/index';
 
 const serverlessConfiguration: AWS = {
@@ -28,6 +29,7 @@ const serverlessConfiguration: AWS = {
             NODE_OPTIONS: '--enable-source-maps --stack-trace-limit=1000',
             DYNAMODB_TABLE_PRODUCTS: 'aws-cloudx-dynamodb-table-products',
             DYNAMODB_TABLE_STOCKS: 'aws-cloudx-dynamodb-table-stocks',
+            SNS_TOPIC_CREATE_PRODUCT: { Ref: 'createProductTopic' },
         },
         iam: {
             role: {
@@ -36,6 +38,22 @@ const serverlessConfiguration: AWS = {
                         Effect: 'Allow',
                         Action: ['dynamodb:*'],
                         Resource: '*',
+                    },
+                    {
+                        Effect: 'Allow',
+                        Action: ['sqs:*'],
+                        Resource: [
+                            {
+                                'Fn::GetAtt': ['catalogItemsQueue', 'Arn'],
+                            },
+                        ],
+                    },
+                    {
+                        Effect: 'Allow',
+                        Action: ['sns:*'],
+                        Resource: {
+                            Ref: 'createProductTopic',
+                        },
                     },
                 ],
             },
@@ -50,6 +68,7 @@ const serverlessConfiguration: AWS = {
         getProductByIdHandler,
         fillDatabaseHandler,
         createProductHandler,
+        catalogBatchProcessHandler,
     },
     package: { individually: true },
     custom: {
@@ -68,6 +87,32 @@ const serverlessConfiguration: AWS = {
             useStage: true,
             basePath: '/dev',
             typefiles: ['./src/mocks/products/types.ts'],
+        },
+    },
+    resources: {
+        Resources: {
+            catalogItemsQueue: {
+                Type: 'AWS::SQS::Queue',
+                Properties: {
+                    QueueName: 'catalogItemsQueue',
+                },
+            },
+            createProductTopic: {
+                Type: 'AWS::SNS::Topic',
+                Properties: {
+                    TopicName: 'createProductTopic',
+                },
+            },
+            createProductSubscription: {
+                Type: 'AWS::SNS::Subscription',
+                Properties: {
+                    Endpoint: 'vladyslav_palyvoda@epam.com',
+                    Protocol: 'email',
+                    TopicArn: {
+                        Ref: 'createProductTopic',
+                    },
+                },
+            },
         },
     },
 };

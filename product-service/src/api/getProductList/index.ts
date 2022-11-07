@@ -1,7 +1,7 @@
 import { createRequestError } from '~/utils/createRequestError';
 import { StatusCodes } from '~/constants/statusCodes';
 import { DocumentClient } from 'aws-sdk/clients/dynamodb';
-import { scan } from '~/db/api/scan';
+import { DynamoDBClient } from '~/clients/dynamodb';
 
 export const getProductList = async (): Promise<DocumentClient.ItemList> => {
     const errorMessage = `Error! Couldn't find the table "${String(
@@ -9,9 +9,9 @@ export const getProductList = async (): Promise<DocumentClient.ItemList> => {
     )}"`;
 
     try {
-        const { Items } = await scan({
+        const { Items } = await DynamoDBClient.scan({
             TableName: String(process.env.DYNAMODB_TABLE_PRODUCTS),
-        });
+        }).promise();
 
         if (!Items) {
             throw createRequestError(

@@ -1,7 +1,7 @@
 import { createRequestError } from '~/utils/createRequestError';
 import { StatusCodes } from '~/constants/statusCodes';
-import { query } from '~/db/api/query';
 import { DocumentClient } from 'aws-sdk/clients/dynamodb';
+import { DynamoDBClient } from '~/clients/dynamodb';
 
 export const getProductById = async (
     id: number,
@@ -9,13 +9,13 @@ export const getProductById = async (
     const errorMessage = `Error! Couldn't get product with id ${id}`;
 
     try {
-        const { Items } = await query({
+        const { Items } = await DynamoDBClient.query({
             TableName: String(process.env.DYNAMODB_TABLE_PRODUCTS),
             KeyConditionExpression: 'id = :id',
             ExpressionAttributeValues: {
                 ':id': id,
             },
-        });
+        }).promise();
 
         if (!Items?.length) {
             throw createRequestError(
