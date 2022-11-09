@@ -1,7 +1,7 @@
 import { createRequestError } from '~/utils/createRequestError';
-import { scan } from '~/db/api/scan';
 import { StatusCodes } from '~/constants/statusCodes';
 import { DocumentClient } from 'aws-sdk/clients/dynamodb';
+import { DynamoDBClient } from '~/clients/dynamodb';
 
 export const getAvailableProductList =
     async (): Promise<DocumentClient.ItemList> => {
@@ -10,9 +10,9 @@ export const getAvailableProductList =
         )}"`;
 
         try {
-            const { Items: productList } = await scan({
+            const { Items: productList } = await DynamoDBClient.scan({
                 TableName: String(process.env.DYNAMODB_TABLE_PRODUCTS),
-            });
+            }).promise();
 
             if (!productList) {
                 throw createRequestError(
@@ -21,9 +21,9 @@ export const getAvailableProductList =
                 );
             }
 
-            const { Items: stockList } = await scan({
+            const { Items: stockList } = await DynamoDBClient.scan({
                 TableName: String(process.env.DYNAMODB_TABLE_STOCKS),
-            });
+            }).promise();
 
             if (!stockList) {
                 throw createRequestError(
