@@ -6,6 +6,7 @@ export default {
         {
             http: {
                 method: 'get',
+                cors: true,
                 path: 'import',
                 queryStringParameters: {
                     name: {
@@ -16,6 +17,12 @@ export default {
                 responseData: {
                     200: 'Successful operation',
                     500: 'Server error',
+                },
+                authorizer: {
+                    name: 'basicAuthorizer',
+                    arn: 'arn:aws:lambda:eu-west-1:147259031518:function:authorization-service-dev-basicAuthorizerHandler',
+                    type: 'TOKEN',
+                    identitySource: 'method.request.header.Authorization',
                 },
             },
         },
