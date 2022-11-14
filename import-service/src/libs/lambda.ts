@@ -4,14 +4,5 @@ import middyJsonBodyParser from '@middy/http-json-body-parser';
 import { APIGatewayProxyHandler } from 'aws-lambda';
 
 export const middyfy = (handler): APIGatewayProxyHandler => {
-    return middy(handler)
-        .use(middyJsonBodyParser())
-        .use(
-            cors({
-                origin: '*',
-                headers: 'Content-Type, Authorization',
-                requestMethods: 'OPTIONS,GET',
-                credentials: true,
-            }),
-        );
+    return middy(handler).use(middyJsonBodyParser()).use(cors());
 };
