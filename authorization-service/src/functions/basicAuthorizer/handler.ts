@@ -1,5 +1,4 @@
 import { APIGatewayAuthorizerResult, APIGatewayEvent } from 'aws-lambda';
-import { middyfy } from '~/libs/lambda';
 
 enum PolicyEffects {
     ALLOW = 'allow',
@@ -38,7 +37,7 @@ const basicAuthorizerHandler = async (
         type: eventType,
     } = event;
 
-    if (eventType !== 'REQUEST') {
+    if (eventType !== 'TOKEN') {
         return generatePolicy(
             authorizationToken,
             methodArn,
@@ -47,11 +46,12 @@ const basicAuthorizerHandler = async (
     }
 
     try {
-        const buff = Buffer.from(authorizationToken, 'base64');
-        const [userName, userPassword] = buff.toString('utf-8').split(':');
+        const [, token] = authorizationToken.split(' ');
+        const [userName, userPassword] = Buffer.from(token, 'base64')
+            .toString('utf8')
+            .split(':');
 
         console.log(`userName: ${userName}, userPassword: ${userPassword}`);
-
         const storedPassword = process.env[userName];
         const effect =
             !storedPassword || storedPassword !== userPassword

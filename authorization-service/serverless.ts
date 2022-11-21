@@ -4,7 +4,11 @@ import { basicAuthorizerHandler } from '~/functions';
 const serverlessConfiguration: AWS = {
     service: 'authorization-service',
     frameworkVersion: '3',
-    plugins: ['serverless-esbuild', 'serverless-offline'],
+    plugins: [
+        'serverless-esbuild',
+        'serverless-offline',
+        'serverless-dotenv-plugin',
+    ],
     useDotenv: true,
     provider: {
         name: 'aws',
